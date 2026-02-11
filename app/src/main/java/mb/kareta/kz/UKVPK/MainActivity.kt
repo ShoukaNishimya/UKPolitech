@@ -57,7 +57,6 @@ class MainActivity : AppCompatActivity() {
         val settings: WebSettings = web.settings
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
-
         settings.allowFileAccess = false
         settings.allowContentAccess = false
         settings.mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
@@ -80,6 +79,17 @@ class MainActivity : AppCompatActivity() {
                 error: SslError
             ) {
                 handler.cancel()
+            }
+
+            override fun onReceivedError(
+                view: WebView,
+                request: WebResourceRequest,
+                error: android.webkit.WebResourceError
+            ) {
+                // Показываем страницу 404 при ошибке загрузки
+                if (request.isForMainFrame) {
+                    view.loadUrl("file:///android_asset/404.html")
+                }
             }
 
             override fun onPageFinished(
